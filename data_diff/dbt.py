@@ -161,7 +161,7 @@ def _local_diff(diff_vars: DiffVars) -> None:
             + prod_qualified_string
             + "[/] \n"
             + column_diffs_str
-            + diff.get_stats_string(is_dbt=True)
+            + diff.get_stats_string()
             + "\n"
         )
     else:
