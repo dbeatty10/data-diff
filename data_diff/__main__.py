@@ -227,6 +227,13 @@ click.Context.formatter_class = MyHelpFormatter
     metavar="PATH",
     help="Override the dbt project directory. Otherwise assumed to be the current directory.",
 )
+@click.option(
+    "--select",
+    default=None,
+    metavar="PATH",
+    help="select dbt resources to compare",
+)
+
 def main(conf, run, **kw):
     if kw["table2"] is None and kw["database2"]:
         # Use the "database table table" form
@@ -263,8 +270,12 @@ def main(conf, run, **kw):
                 profiles_dir_override=kw["dbt_profiles_dir"],
                 project_dir_override=kw["dbt_project_dir"],
                 is_cloud=kw["cloud"],
+                selection=kw["select"],
             )
-            render_diff(diff, kw["limit"], kw["stats"], kw["json_output"])
+            for d in diff:
+                # import pdb; pdb.set_trace()
+                rich.print(f"Diffing {'.'.join(d.info_tree.info.tables[0].table_path)} with {'.'.join(d.info_tree.info.tables[1].table_path)}")
+                render_diff(d, kw["limit"], kw["stats"], kw["json_output"])
 
         else:
             return _data_diff(**kw)
